@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">SiltDemoJava</string>
+    <string name="verify_button">Verify with </string>
+    <string name="verify_custom_button">Custom verify button</string>
+    <string name="silt_powered_by">Powered by</string>
+</resources>
