@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.siltsdk.SiltActivity;
+
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -17,24 +19,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-        Button btn = findViewById(R.id.silt_button);
+        /*Button btn = findViewById(R.id.silt_button);
         Typeface futura = Typeface.createFromAsset(getAssets(), "FuturaMedium.ttf");
         btn.setTypeface(futura);
 
-        Button btn2 = findViewById(R.id.silt_button2);
-        btn2.setTypeface(futura);
+        /*Button btn2 = findViewById(R.id.silt_button2);
+        btn2.setTypeface(futura);*/
 
     }
 
     public void loadSiltSignUp(View v) {
+        Log.d(TAG, "Load signup");
         Intent siltActivity = new Intent(this, SiltActivity.class);
         startActivityForResult(siltActivity, VERIFY_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         Log.d(TAG, "Got activity result");
         if (resultCode == RESULT_OK && requestCode == VERIFY_CODE) {
             if (data.hasExtra("user_id")) {

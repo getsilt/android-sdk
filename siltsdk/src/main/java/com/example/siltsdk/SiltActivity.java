@@ -1,4 +1,4 @@
-package com.example.siltdemojava;
+package com.example.siltsdk;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -48,7 +48,7 @@ public class SiltActivity extends AppCompatActivity {
                 Log.d(TAG, url);
                 Uri uri = Uri.parse(url);
                 String path = uri.getPath();
-                String user_id = uri.getQueryParameter("customer_id");
+                String user_id = uri.getQueryParameter("user_id");
                 if(path.equals("/finishedVerification")) {
                     Log.d(TAG, "user finished verification");
                     Intent data = new Intent();

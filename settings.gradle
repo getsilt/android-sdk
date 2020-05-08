@@ -1,2 +1,3 @@
 rootProject.name='SiltDemoJava'
 include ':app'
+include ':siltsdk'

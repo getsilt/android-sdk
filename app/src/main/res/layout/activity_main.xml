@@ -32,7 +32,6 @@
             android:text="@string/verify_button"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
-            android:textIsSelectable="true"
             android:textSize="18sp"
             android:topLeftRadius="10dp"
             android:topRightRadius="10dp" />
@@ -56,7 +55,6 @@
             android:paddingBottom="10dip"
             android:text="@string/verify_button"
             android:textAllCaps="false"
-            android:textIsSelectable="true"
             android:textSize="18sp"
             android:topLeftRadius="10dp"
             android:topRightRadius="10dp" />
@@ -77,10 +75,10 @@
             android:paddingBottom="10dip"
             android:text="@string/verify_custom_button"
             android:textAllCaps="false"
-            android:textIsSelectable="true"
             android:textSize="18sp"
             android:topLeftRadius="10dp"
-            android:topRightRadius="10dp" />
+            android:topRightRadius="10dp"
+            />
 
         <!-- Use powered by under your custom button -->
         <LinearLayout

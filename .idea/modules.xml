@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SiltDemoJava.iml" filepath="$PROJECT_DIR$/SiltDemoJava.iml" group="SiltDemoJava" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="SiltDemoJava/app" />
+      <module fileurl="file://$PROJECT_DIR$/siltsdk/siltsdk.iml" filepath="$PROJECT_DIR$/siltsdk/siltsdk.iml" group="SiltDemoJava/siltsdk" />
     </modules>
   </component>
 </project>
