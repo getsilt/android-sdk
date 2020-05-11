@@ -1,4 +1,4 @@
-package com.example.siltsdk;
+package com.silt.siltsdk;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -26,11 +26,8 @@ public class SiltActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "Created web activity");
         CompanyAppId = getIntent().getStringExtra("companyAppId");
-        Log.d(TAG, "Company App ID " + CompanyAppId);
         setContentView(R.layout.activity_silt);
-
         loadSiltSignUp(CompanyAppId);
     }
 
@@ -47,16 +44,9 @@ public class SiltActivity extends AppCompatActivity {
     public void loadSiltSignUp(String companyAppId) {
         final String url = SiltSignUpUrl + "?company_app_id=" + companyAppId;
         webview = (WebView) findViewById(R.id.silt_web);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            webview.setWebContentsDebuggingEnabled(true);
-        }
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setAllowFileAccessFromFileURLs(true);
-        webSettings.setAllowUniversalAccessFromFileURLs(true);
-        webSettings.setPluginState(WebSettings.PluginState.ON);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             webSettings.setMediaPlaybackRequiresUserGesture(false);
         }
@@ -64,7 +54,6 @@ public class SiltActivity extends AppCompatActivity {
         webview.setWebViewClient(new WebViewClient() {
             @Override
             public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
-                Log.d(TAG, url);
                 Uri uri = Uri.parse(url);
                 String path = uri.getPath();
                 String user_id = uri.getQueryParameter("user_id");
@@ -72,7 +61,7 @@ public class SiltActivity extends AppCompatActivity {
                     grantPermission();
                 }
                 if(path.equals("/finishedVerification")) {
-                    Log.d(TAG, "user finished verification");
+                    Log.d(TAG, "user finished verification " + user_id);
                     Intent data = new Intent();
                     data.putExtra("user_id", user_id);
                     setResult(RESULT_OK, data);
@@ -80,28 +69,21 @@ public class SiltActivity extends AppCompatActivity {
                 }
                 super.doUpdateVisitedHistory(view, url, isReload);
             }
-
         });
 
         webview.setWebChromeClient(new WebChromeClient() {
-
             @Override
             public void onPermissionRequest(final PermissionRequest request) {
-                Log.d(TAG, "onPermissionRequest");
-                //grantPermission();
+                grantPermission();
                 SiltActivity.this.runOnUiThread(new Runnable() {
                     @TargetApi(Build.VERSION_CODES.M)
                     @Override
                     public void run() {
                         request.grant(request.getResources());
-                        Log.d(TAG, request.getResources().toString());
-                        Log.d(TAG, "GRANTED");
-                        grantPermission();
                     }
                 });
             }
         });
-
         webview.loadUrl(url);
     }
 

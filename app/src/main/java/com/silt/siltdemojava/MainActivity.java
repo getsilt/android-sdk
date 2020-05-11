@@ -1,4 +1,4 @@
-package com.example.siltdemojava;
+package com.silt.siltdemojava;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.example.siltsdk.SiltActivity;
+import com.silt.siltsdk.SiltActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadSiltSignUp(View v) {
-        Log.d(TAG, "loadSiltSignUp");
         // ask for your companyAppId on hello@getsilt.com
         // and use it in the initializer as extra
         // siltActivity.putExtra("companyAppId", "{YOUR_CUSTOMER_APP_ID}")
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == VERIFY_CODE) {
             if (data.hasExtra("user_id")) {
-                Log.d(TAG, "" + data.getStringExtra("user_id"));
+                Log.d(TAG, "Got user Id from Silt: " + data.getStringExtra("user_id"));
 
                 /*
                 * 1. Place here a function that calls to your backend with user_id

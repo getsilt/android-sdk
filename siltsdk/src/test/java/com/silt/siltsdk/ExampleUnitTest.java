@@ -1,4 +1,4 @@
-package com.example.siltdemojava;
+package com.silt.siltsdk;
 
 import org.junit.Test;
 
