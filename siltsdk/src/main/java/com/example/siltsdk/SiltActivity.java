@@ -17,16 +17,20 @@ import android.webkit.WebViewClient;
 public class SiltActivity extends AppCompatActivity {
     private static final String TAG = "SiltActivity";
     private static final String SiltSignUpUrl = "https://signup.getsilt.com";
+    private String CompanyAppId;
+    //private WebView webview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "Created web activity");
+        CompanyAppId = getIntent().getStringExtra("companyAppId");
+        Log.d(TAG, "Company App ID " + CompanyAppId);
         setContentView(R.layout.activity_silt);
-        loadSiltSignUp();
+        loadSiltSignUp(CompanyAppId);
     }
 
-    public void loadSiltSignUp() {
-        final String url = SiltSignUpUrl + "?customer_id=123asdf123asdf";
+    public void loadSiltSignUp(String companyAppId) {
+        final String url = SiltSignUpUrl + "?company_app_id=" + companyAppId;
         WebView web = (WebView) findViewById(R.id.silt_web);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             web.setWebContentsDebuggingEnabled(true);
@@ -58,6 +62,7 @@ public class SiltActivity extends AppCompatActivity {
                 }
                 super.doUpdateVisitedHistory(view, url, isReload);
             }
+
         });
 
         web.setWebChromeClient(new WebChromeClient() {
@@ -68,9 +73,10 @@ public class SiltActivity extends AppCompatActivity {
                     @TargetApi(Build.VERSION_CODES.M)
                     @Override
                     public void run() {
-                        Log.d(TAG, request.getOrigin().toString());
-                        Log.d(TAG, "GRANTED");
                         request.grant(request.getResources());
+                        Log.d(TAG, request.getResources().toString());
+                        Log.d(TAG, "GRANTED");
+
                     }
                 });
             }
@@ -78,4 +84,14 @@ public class SiltActivity extends AppCompatActivity {
 
         web.loadUrl(url);
     }
+
+/*    @Override
+    public void onBackPressed(){
+        if(webview.canGoBack()){
+            // If web view have back history, then go to the web view back history
+            webview.goBack();
+        }else {
+            finish();
+        }
+    }*/
 }
