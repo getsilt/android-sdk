@@ -1,9 +1,13 @@
-package com.example.siltsdk;
+package com.silt.siltsdk;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,40 +21,47 @@ import android.webkit.WebViewClient;
 public class SiltActivity extends AppCompatActivity {
     private static final String TAG = "SiltActivity";
     private static final String SiltSignUpUrl = "https://signup.getsilt.com";
+    private String CompanyAppId;
+    private WebView webview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "Created web activity");
+        CompanyAppId = getIntent().getStringExtra("companyAppId");
         setContentView(R.layout.activity_silt);
-        loadSiltSignUp();
+        loadSiltSignUp(CompanyAppId);
     }
 
-    public void loadSiltSignUp() {
-        final String url = SiltSignUpUrl + "?customer_id=123asdf123asdf";
-        WebView web = (WebView) findViewById(R.id.silt_web);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            web.setWebContentsDebuggingEnabled(true);
+    public void grantPermission() {
+        String permission = Manifest.permission.CAMERA;
+        int grant = ContextCompat.checkSelfPermission(this, permission);
+        if (grant != PackageManager.PERMISSION_GRANTED) {
+            String[] permission_list = new String[1];
+            permission_list[0] = permission;
+            ActivityCompat.requestPermissions(this, permission_list, 1);
         }
-        WebSettings webSettings = web.getSettings();
+    }
+
+    public void loadSiltSignUp(String companyAppId) {
+        final String url = SiltSignUpUrl + "?company_app_id=" + companyAppId;
+        webview = (WebView) findViewById(R.id.silt_web);
+        WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setAllowFileAccessFromFileURLs(true);
-        webSettings.setAllowUniversalAccessFromFileURLs(true);
-        webSettings.setPluginState(WebSettings.PluginState.ON);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             webSettings.setMediaPlaybackRequiresUserGesture(false);
         }
 
-        web.setWebViewClient(new WebViewClient() {
+        webview.setWebViewClient(new WebViewClient() {
             @Override
             public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
-                Log.d(TAG, url);
                 Uri uri = Uri.parse(url);
                 String path = uri.getPath();
                 String user_id = uri.getQueryParameter("user_id");
+                if (path.contains("/document-select")) {
+                    grantPermission();
+                }
                 if(path.equals("/finishedVerification")) {
-                    Log.d(TAG, "user finished verification");
+                    Log.d(TAG, "user finished verification " + user_id);
                     Intent data = new Intent();
                     data.putExtra("user_id", user_id);
                     setResult(RESULT_OK, data);
@@ -60,22 +71,29 @@ public class SiltActivity extends AppCompatActivity {
             }
         });
 
-        web.setWebChromeClient(new WebChromeClient() {
+        webview.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onPermissionRequest(final PermissionRequest request) {
-                Log.d(TAG, "onPermissionRequest");
+                grantPermission();
                 SiltActivity.this.runOnUiThread(new Runnable() {
                     @TargetApi(Build.VERSION_CODES.M)
                     @Override
                     public void run() {
-                        Log.d(TAG, request.getOrigin().toString());
-                        Log.d(TAG, "GRANTED");
                         request.grant(request.getResources());
                     }
                 });
             }
         });
+        webview.loadUrl(url);
+    }
 
-        web.loadUrl(url);
+    @Override
+    public void onBackPressed(){
+        if(webview.canGoBack()){
+            // If web view have back history, then go to the web view back history
+            webview.goBack();
+        }else {
+            finish();
+        }
     }
 }

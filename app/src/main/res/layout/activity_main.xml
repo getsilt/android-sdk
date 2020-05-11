@@ -14,50 +14,19 @@
 
         <!-- Blue Silt button -->
         <Button
-            android:id="@+id/silt_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/silt_button_blue"
-            android:bottomLeftRadius="10dp"
-            android:bottomRightRadius="10dp"
-            android:drawableEnd="@drawable/silt_white_small"
-            android:drawableRight="@drawable/silt_white_small"
-            android:drawablePadding="10dp"
+            android:id="@+id/silt_button2"
+            style="@style/SiltButtonBlue"
             android:onClick="loadSiltSignUp"
-            android:paddingLeft="20dip"
-            android:paddingTop="10dip"
-            android:paddingRight="20dip"
-            android:paddingBottom="10dip"
-            android:text="@string/verify_button"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:topLeftRadius="10dp"
-            android:topRightRadius="10dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></Button>
 
         <!-- Silver Silt button -->
         <Button
-            android:id="@+id/silt_button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/silt_button_silver"
-            android:bottomLeftRadius="10dp"
-            android:bottomRightRadius="10dp"
-            android:drawableEnd="@drawable/silt_blue_small"
-            android:drawableRight="@drawable/silt_blue_small"
-            android:drawablePadding="10dp"
+            android:id="@+id/silt_button"
+            style="@style/SiltButton"
             android:onClick="loadSiltSignUp"
-            android:paddingLeft="20dip"
-            android:paddingTop="10dip"
-            android:paddingRight="20dip"
-            android:paddingBottom="10dip"
-            android:text="@string/verify_button"
-            android:textAllCaps="false"
-            android:textSize="18sp"
-            android:topLeftRadius="10dp"
-            android:topRightRadius="10dp" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></Button>
 
         <!-- Any button you want -->
         <Button
@@ -79,7 +48,6 @@
             android:topLeftRadius="10dp"
             android:topRightRadius="10dp"
             />
-
         <!-- Use powered by under your custom button -->
         <LinearLayout
             android:layout_width="wrap_content"

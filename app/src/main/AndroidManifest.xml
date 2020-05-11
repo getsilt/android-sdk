@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.siltdemojava">
+    package="com.silt.siltdemojava">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.webkit.PermissionRequest" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.VIDEO_CAPTURE" />
-    <uses-permission android:name="android.permission.AUDIO_CAPTURE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-feature android:name="android.hardware.camera" android:required="true" />
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="true" />
-
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -24,8 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.siltsdk.SiltActivity" />
-        <activity android:name="com.example.siltdemojava.MainActivity">
+        <activity android:name="com.silt.siltsdk.SiltActivity" />
+        <activity android:name="com.silt.siltdemojava.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,15 +1,13 @@
-package com.example.siltdemojava;
+package com.silt.siltdemojava;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 
-import com.example.siltsdk.SiltActivity;
+import com.silt.siltsdk.SiltActivity;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -19,33 +17,29 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*Button btn = findViewById(R.id.silt_button);
-        Typeface futura = Typeface.createFromAsset(getAssets(), "FuturaMedium.ttf");
-        btn.setTypeface(futura);
-
-        /*Button btn2 = findViewById(R.id.silt_button2);
-        btn2.setTypeface(futura);*/
-
     }
 
     public void loadSiltSignUp(View v) {
-        Log.d(TAG, "Load signup");
+        // ask for your companyAppId on hello@getsilt.com
+        // and use it in the initializer as extra
+        // siltActivity.putExtra("companyAppId", "{YOUR_CUSTOMER_APP_ID}")
+        // demo companyAppId: 9f936bc0-328f-4985-95b1-2c562061711f
         Intent siltActivity = new Intent(this, SiltActivity.class);
+        siltActivity.putExtra("companyAppId", "9f936bc0-328f-4985-95b1-2c562061711f");
         startActivityForResult(siltActivity, VERIFY_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "Got activity result");
         if (resultCode == RESULT_OK && requestCode == VERIFY_CODE) {
             if (data.hasExtra("user_id")) {
-                Log.d(TAG, "" + data.getStringExtra("user_id"));
+                Log.d(TAG, "Got user Id from Silt: " + data.getStringExtra("user_id"));
 
                 /*
                 * 1. Place here a function that calls to your backend with user_id
                 * 2. Your backend should make a request to Silt API to /v1/users/{user_id}
-                * 3. Retrieve the info that want from that response
+                * 3. Retrieve the info that you want from that response
                 * */
 
             }
