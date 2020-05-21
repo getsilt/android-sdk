@@ -7,6 +7,7 @@ The SDK framework files are inside `siltsdk` directory.
 ## How to
 You can check the only code you will need to add to your app in the example ViewController file:
 app/src/main/java/com/silt/siltdemojava/MainActivity.java
+You can import the SDK from the jitpack: https://jitpack.io/#getsilt/android-sdk
 
 ## How it works
 This SDK consists only in a button that opens a webview and captures once the user has finished the verification in the webview a user ID.
