@@ -22,16 +22,8 @@
       <change beforePath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.6.4/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/androidTest/java/com/example/siltdemojava/ExampleInstrumentedTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/androidTest/java/com/silt/siltdemojava/ExampleInstrumentedTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/siltdemojava/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/silt/siltdemojava/MainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/test/java/com/example/siltdemojava/ExampleUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/test/java/com/silt/siltdemojava/ExampleUnitTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/siltsdk/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/siltsdk/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/siltsdk/src/androidTest/java/com/example/siltsdk/ExampleInstrumentedTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/siltsdk/src/androidTest/java/com/silt/siltsdk/ExampleInstrumentedTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/siltsdk/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/siltsdk/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/siltsdk/src/main/java/com/example/siltsdk/SiltActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/siltsdk/src/main/java/com/silt/siltsdk/SiltActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/siltsdk/src/test/java/com/example/siltsdk/ExampleUnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/siltsdk/src/test/java/com/silt/siltsdk/ExampleUnitTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/silt/siltdemojava/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/silt/siltdemojava/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/siltsdk/src/main/java/com/silt/siltsdk/SiltActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/siltsdk/src/main/java/com/silt/siltsdk/SiltActivity.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

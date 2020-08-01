@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         // siltActivity.putExtra("companyAppId", "{YOUR_CUSTOMER_APP_ID}")
         // demo companyAppId: 9f936bc0-328f-4985-95b1-2c562061711f
         Intent siltActivity = new Intent(this, SiltActivity.class);
-        siltActivity.putExtra("companyAppId", "9f936bc0-328f-4985-95b1-2c562061711f");
+        siltActivity.putExtra("companyAppId", "6f7838e4-3b30-447e-81c1-3e123bc34980");
         startActivityForResult(siltActivity, VERIFY_CODE);
     }
 
@@ -33,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == VERIFY_CODE) {
-            if (data.hasExtra("user_id")) {
-                Log.d(TAG, "Got user Id from Silt: " + data.getStringExtra("user_id"));
-
+            if (data.hasExtra("silt_user_id") && data.hasExtra("company_app_token")) {
+                Log.d(TAG, "####### Got user Id from Silt: " + data.getStringExtra("silt_user_id"));
+                Log.d(TAG, "####### Got Company App Token: " + data.getStringExtra("company_app_token"));
                 /*
                 * 1. Place here a function that calls to your backend with user_id
                 * 2. Your backend should make a request to Silt API to /v1/users/{user_id}

@@ -20,7 +20,7 @@ import android.webkit.WebViewClient;
 
 public class SiltActivity extends AppCompatActivity {
     private static final String TAG = "SiltActivity";
-    private static final String SiltSignUpUrl = "https://signup.getsilt.com";
+    private static final String SiltSignUpUrl = "https://signup-stg.getsilt.com";
     private String CompanyAppId;
     private WebView webview;
     @Override
@@ -56,15 +56,26 @@ public class SiltActivity extends AppCompatActivity {
             public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
                 Uri uri = Uri.parse(url);
                 String path = uri.getPath();
-                String user_id = uri.getQueryParameter("user_id");
+                String silt_user_id = uri.getQueryParameter("silt_user_id");
+                String company_app_token = uri.getQueryParameter("company_app_token");
+
+                // UPDATE user_id and company_app token, set it to intent
+                Intent data = getIntent();
+                if(  silt_user_id != null && !silt_user_id.isEmpty() ) {
+                    data.putExtra("silt_user_id", silt_user_id);
+                }
+                if( company_app_token != null && !company_app_token.isEmpty() ) {
+                    data.putExtra("company_app_token", company_app_token);
+                }
+                setResult(RESULT_OK, data);
+
+                // Aks for Camera permissions
                 if (path.contains("/document-select")) {
                     grantPermission();
                 }
-                if(path.equals("/finishedVerification")) {
-                    Log.d(TAG, "user finished verification " + user_id);
-                    Intent data = new Intent();
-                    data.putExtra("user_id", user_id);
-                    setResult(RESULT_OK, data);
+
+                // Close web view after finished verification
+                if(path.equals("/finished-verification")) {
                     finish();
                 }
                 super.doUpdateVisitedHistory(view, url, isReload);
