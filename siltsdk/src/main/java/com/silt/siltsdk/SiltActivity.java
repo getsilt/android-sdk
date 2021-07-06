@@ -22,13 +22,15 @@ public class SiltActivity extends AppCompatActivity {
     private static final String TAG = "SiltActivity";
     private static final String SiltSignUpUrl = "https://signup-stg.getsilt.com";
     private String CompanyAppId;
+    private String extraQuery;
     private WebView webview;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         CompanyAppId = getIntent().getStringExtra("companyAppId");
+        extraQuery = getIntent().getStringExtra("extraQuery");
         setContentView(R.layout.activity_silt);
-        loadSiltSignUp(CompanyAppId);
+        loadSiltSignUp(CompanyAppId, extraQuery);
     }
 
     public void grantPermission() {
@@ -41,8 +43,11 @@ public class SiltActivity extends AppCompatActivity {
         }
     }
 
-    public void loadSiltSignUp(String companyAppId) {
-        final String url = SiltSignUpUrl + "?company_app_id=" + companyAppId;
+    public void loadSiltSignUp(String companyAppId, String extraQuery) {
+        if (extraQuery == null) {
+            extraQuery = "";
+        }
+        final String url = SiltSignUpUrl + "?company_app_id=" + companyAppId + extraQuery;
         webview = (WebView) findViewById(R.id.silt_web);
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);

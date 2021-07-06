@@ -3,11 +3,17 @@ package com.silt.siltdemojava;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.UrlQuerySanitizer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import com.silt.siltsdk.SiltActivity;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -25,7 +31,10 @@ public class MainActivity extends AppCompatActivity {
         // siltActivity.putExtra("companyAppId", "{YOUR_CUSTOMER_APP_ID}")
         // demo companyAppId: 9f936bc0-328f-4985-95b1-2c562061711f
         Intent siltActivity = new Intent(this, SiltActivity.class);
-        siltActivity.putExtra("companyAppId", "6f7838e4-3b30-447e-81c1-3e123bc34980");
+        siltActivity.putExtra("companyAppId", "2022a022-a662-4c58-8865-a1fb904d2cde");
+        String queryParams = "&user_email=test@getsilt.com";
+
+        siltActivity.putExtra("extraQuery", queryParams);
         startActivityForResult(siltActivity, VERIFY_CODE);
     }
 
