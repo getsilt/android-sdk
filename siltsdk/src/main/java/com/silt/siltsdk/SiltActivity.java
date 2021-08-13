@@ -11,19 +11,36 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.webkit.PermissionRequest;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SiltActivity extends AppCompatActivity {
     private static final String TAG = "SiltActivity";
-    private static final String SiltSignUpUrl = "https://signup-stg.getsilt.com";
+    private static final String SiltSignUpUrl = "https://signup.getsilt.com";
     private String CompanyAppId;
     private String extraQuery;
     private WebView webview;
+
+    //https://developpaper.com/android-webview-supports-input-file-to-enable-camera-select-photos/
+    private android.webkit.ValueCallback mUploadCallbackAboveL;
+    private android.webkit.ValueCallback mUploadCallbackBelow;
+    private Uri imageUri;
+    private int REQUEST_CODE = 1234;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +69,9 @@ public class SiltActivity extends AppCompatActivity {
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setAllowFileAccess(true);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             webSettings.setMediaPlaybackRequiresUserGesture(false);
         }
@@ -59,6 +79,8 @@ public class SiltActivity extends AppCompatActivity {
         webview.setWebViewClient(new WebViewClient() {
             @Override
             public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
+                Log.d(TAG, "doUpdateVisitedHistory");
+
                 Uri uri = Uri.parse(url);
                 String path = uri.getPath();
                 String silt_user_id = uri.getQueryParameter("silt_user_id");
@@ -66,10 +88,10 @@ public class SiltActivity extends AppCompatActivity {
 
                 // UPDATE user_id and company_app token, set it to intent
                 Intent data = getIntent();
-                if(  silt_user_id != null && !silt_user_id.isEmpty() ) {
+                if (silt_user_id != null && !silt_user_id.isEmpty()) {
                     data.putExtra("silt_user_id", silt_user_id);
                 }
-                if( company_app_token != null && !company_app_token.isEmpty() ) {
+                if (company_app_token != null && !company_app_token.isEmpty()) {
                     data.putExtra("company_app_token", company_app_token);
                 }
                 setResult(RESULT_OK, data);
@@ -80,7 +102,7 @@ public class SiltActivity extends AppCompatActivity {
                 }
 
                 // Close web view after finished verification
-                if(path.equals("/finished-verification")) {
+                if (path.equals("/finished-verification")) {
                     finish();
                 }
                 super.doUpdateVisitedHistory(view, url, isReload);
@@ -88,6 +110,14 @@ public class SiltActivity extends AppCompatActivity {
         });
 
         webview.setWebChromeClient(new WebChromeClient() {
+
+            public boolean onShowFileChooser(WebView mWebView, ValueCallback valueCallback, WebChromeClient.FileChooserParams fileChooserParams)
+            {
+                mUploadCallbackAboveL = valueCallback;
+                takePhoto();
+                return true;
+            }
+
             @Override
             public void onPermissionRequest(final PermissionRequest request) {
                 grantPermission();
@@ -100,7 +130,80 @@ public class SiltActivity extends AppCompatActivity {
                 });
             }
         });
+
         webview.loadUrl(url);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            if (mUploadCallbackAboveL != null) {
+                chooseAbove(resultCode, data);
+            } else {
+                Toast.makeText(this, "error occurred", Toast.LENGTH_SHORT).show();
+            }
+        }
+        return;
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String filePath = Environment.getExternalStorageDirectory() + File.separator
+                + Environment.DIRECTORY_PICTURES + File.separator;
+        File image = new File(filePath + timeStamp + ".jpg");
+        imageUri = Uri.fromFile(image);
+        return image;
+    }
+
+    private void chooseAbove(int resultCode, Intent data) {
+        Log.e(TAG, "return call method -- chooseabove");
+
+        if (RESULT_OK == resultCode) {
+            updatePhotos();
+
+            if (data != null) {
+                //Here is the processing for selecting pictures from files
+                Uri[] results;
+                Uri uriData = data.getData();
+                if (uriData != null) {
+                    results = new Uri[]{uriData};
+                    for (Uri uri : results) {
+                        Log.e(TAG, "system return URI:" + uri.toString());
+                    }
+                    mUploadCallbackAboveL.onReceiveValue(results);
+                } else {
+                    mUploadCallbackAboveL.onReceiveValue(null);
+                }
+            } else {
+                Log.e(TAG, "custom result:" + imageUri.toString());
+                mUploadCallbackAboveL.onReceiveValue(new Uri[]{imageUri});
+            }
+        } else {
+            mUploadCallbackAboveL.onReceiveValue(null);
+        }
+        mUploadCallbackAboveL = null;
+    }
+
+    private void updatePhotos() {
+        //It doesn't matter if the broadcast is sent multiple times (i.e. when the photos are selected successfully), but it just wakes up the system to refresh the media files
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        intent.setData(imageUri);
+        sendBroadcast(intent);
+    }
+
+
+    private void takePhoto() {
+        try {
+            createImageFile();
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            startActivityForResult(intent, REQUEST_CODE);
+        } catch (IOException ex) {
+
+        }
     }
 
     @Override
