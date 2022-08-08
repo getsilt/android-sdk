@@ -3,6 +3,7 @@ package com.silt.siltsdk;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public class SiltActivity extends AppCompatActivity {
     private static final String TAG = "SiltActivity";
@@ -154,7 +156,10 @@ public class SiltActivity extends AppCompatActivity {
         String filePath = Environment.getExternalStorageDirectory() + File.separator
                 + Environment.DIRECTORY_PICTURES + File.separator;
         File image = new File(filePath + timeStamp + ".jpg");
-        imageUri = Uri.fromFile(image);
+        imageUri = FileProvider.getUriForFile(
+                Objects.requireNonNull(getApplicationContext()),
+                "com.silt.siltsdk.provider",
+                image);
         return image;
     }
 
