@@ -31,14 +31,13 @@ import java.util.Objects;
 
 public class SiltActivity extends AppCompatActivity {
     private static final String TAG = "SiltActivity";
-    private static final String SiltSignUpUrl = "https://signup.getsilt.com";
+    private static final String SiltSignUpUrl = "https://signup-stg.getsilt.com";
     private String CompanyAppId;
     private String extraQuery;
     private WebView webview;
 
-    //https://developpaper.com/android-webview-supports-input-file-to-enable-camera-select-photos/
+    //https://developpaper.com/android-webview¢-supports-input-file-to-enable-camera-select-photos/
     private android.webkit.ValueCallback mUploadCallbackAboveL;
-    private android.webkit.ValueCallback mUploadCallbackBelow;
     private Uri imageUri;
     private int REQUEST_CODE = 1234;
 
@@ -53,11 +52,19 @@ public class SiltActivity extends AppCompatActivity {
     }
 
     public void grantPermission() {
-        String permission = Manifest.permission.CAMERA;
-        int grant = ContextCompat.checkSelfPermission(this, permission);
-        if (grant != PackageManager.PERMISSION_GRANTED) {
+        String permissionCamera = Manifest.permission.CAMERA;
+        int grantCamera = ContextCompat.checkSelfPermission(this, permissionCamera);
+        if (grantCamera != PackageManager.PERMISSION_GRANTED) {
             String[] permission_list = new String[1];
-            permission_list[0] = permission;
+            permission_list[0] = permissionCamera;
+            ActivityCompat.requestPermissions(this, permission_list, 1);
+        }
+
+        String permissionFiles = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        int grantFiles = ContextCompat.checkSelfPermission(this, permissionFiles);
+        if (grantFiles != PackageManager.PERMISSION_GRANTED) {
+            String[] permission_list = new String[1];
+            permission_list[0] = permissionFiles;
             ActivityCompat.requestPermissions(this, permission_list, 1);
         }
     }
@@ -149,6 +156,23 @@ public class SiltActivity extends AppCompatActivity {
         }
         return;
     }
+
+    /*private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        imageFilePath = image.getAbsolutePath();
+        Log.e(TAG, "createImageFile got image Uri: " + imageFilePath);
+        return image;
+    }*/
 
     private File createImageFile() throws IOException {
         // Create an image file name
