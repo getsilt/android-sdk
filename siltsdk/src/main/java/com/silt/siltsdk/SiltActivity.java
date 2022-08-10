@@ -31,7 +31,7 @@ import java.util.Objects;
 
 public class SiltActivity extends AppCompatActivity {
     private static final String TAG = "SiltActivity";
-    private static final String SiltSignUpUrl = "https://signup-stg.getsilt.com";
+    private static final String SiltSignUpUrl = "https://signup.getsilt.com";
     private String CompanyAppId;
     private String extraQuery;
     private WebView webview;
@@ -156,23 +156,6 @@ public class SiltActivity extends AppCompatActivity {
         }
         return;
     }
-
-    /*private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,
-                ".jpg",
-                storageDir
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        imageFilePath = image.getAbsolutePath();
-        Log.e(TAG, "createImageFile got image Uri: " + imageFilePath);
-        return image;
-    }*/
 
     private File createImageFile() throws IOException {
         // Create an image file name
