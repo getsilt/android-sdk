@@ -17,7 +17,7 @@
             android:name="com.google.android.actions"
             android:resource="@xml/file_paths" />
 
-        <activity android:name=".SiltActivity" />
+        <activity android:name=".SiltActivity" android:requestLegacyExternalStorage="true"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

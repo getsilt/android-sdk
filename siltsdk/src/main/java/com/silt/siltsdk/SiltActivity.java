@@ -106,9 +106,9 @@ public class SiltActivity extends AppCompatActivity {
                 setResult(RESULT_OK, data);
 
                 // Aks for Camera permissions
-                if (path.contains("/document-select")) {
+                /*if (path.contains("/document-select")) {
                     grantPermission();
-                }
+                }*/
 
                 // Close web view after finished verification
                 if (path.equals("/finished-verification")) {
@@ -147,6 +147,8 @@ public class SiltActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult requestCode: " + requestCode +
+                " Result Code: " + resultCode);
         if (requestCode == REQUEST_CODE) {
             if (mUploadCallbackAboveL != null) {
                 chooseAbove(resultCode, data);
@@ -171,8 +173,6 @@ public class SiltActivity extends AppCompatActivity {
     }
 
     private void chooseAbove(int resultCode, Intent data) {
-        Log.d(TAG, "return call method -- chooseabove");
-
         if (RESULT_OK == resultCode) {
             updatePhotos();
 
@@ -208,14 +208,15 @@ public class SiltActivity extends AppCompatActivity {
 
     private void takePhoto() {
         try {
+            grantPermission();
             createImageFile();
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             startActivityForResult(intent, REQUEST_CODE);
 
         } catch (IOException ex) {
-
+            Log.e(TAG, "Found exception while taking photo: ", ex);
         }
     }
 
