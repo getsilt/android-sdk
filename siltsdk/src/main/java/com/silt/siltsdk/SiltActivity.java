@@ -106,9 +106,9 @@ public class SiltActivity extends AppCompatActivity {
                 setResult(RESULT_OK, data);
 
                 // Aks for Camera permissions
-                /*if (path.contains("/document-select")) {
+                if (path.contains("/document-select/")) {
                     grantPermission();
-                }*/
+                }
 
                 // Close web view after finished verification
                 if (path.equals("/finished-verification")) {
