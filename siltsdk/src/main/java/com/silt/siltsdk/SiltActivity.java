@@ -109,6 +109,9 @@ public class SiltActivity extends AppCompatActivity {
                 if (path.contains("/document-select/")) {
                     grantPermission();
                 }
+                if (path.contains("/biocheck")) {
+                    grantPermission();
+                }
 
                 // Close web view after finished verification
                 if (path.equals("/finished-verification")) {
