@@ -26,7 +26,9 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class SiltActivity extends AppCompatActivity {
@@ -53,19 +55,19 @@ public class SiltActivity extends AppCompatActivity {
 
     public void grantPermission() {
         String permissionCamera = Manifest.permission.CAMERA;
+        String permissionFiles = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        List<String> permissionsList = new ArrayList<String>();
         int grantCamera = ContextCompat.checkSelfPermission(this, permissionCamera);
         if (grantCamera != PackageManager.PERMISSION_GRANTED) {
-            String[] permission_list = new String[1];
-            permission_list[0] = permissionCamera;
-            ActivityCompat.requestPermissions(this, permission_list, 1);
+            permissionsList.add(permissionCamera);
         }
-
-        String permissionFiles = Manifest.permission.WRITE_EXTERNAL_STORAGE;
         int grantFiles = ContextCompat.checkSelfPermission(this, permissionFiles);
         if (grantFiles != PackageManager.PERMISSION_GRANTED) {
-            String[] permission_list = new String[1];
-            permission_list[0] = permissionFiles;
-            ActivityCompat.requestPermissions(this, permission_list, 1);
+            permissionsList.add(permissionFiles);
+        }
+
+        if (permissionsList.size() > 0) {
+            ActivityCompat.requestPermissions(this, permissionsList.toArray(new String[permissionsList.size()]), 1);
         }
     }
 
@@ -88,8 +90,6 @@ public class SiltActivity extends AppCompatActivity {
         webview.setWebViewClient(new WebViewClient() {
             @Override
             public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
-                Log.d(TAG, "doUpdateVisitedHistory");
-
                 Uri uri = Uri.parse(url);
                 String path = uri.getPath();
                 String silt_user_id = uri.getQueryParameter("silt_user_id");
@@ -171,7 +171,7 @@ public class SiltActivity extends AppCompatActivity {
     }
 
     private void chooseAbove(int resultCode, Intent data) {
-        Log.e(TAG, "return call method -- chooseabove");
+        Log.d(TAG, "return call method -- chooseabove");
 
         if (RESULT_OK == resultCode) {
             updatePhotos();
@@ -183,14 +183,13 @@ public class SiltActivity extends AppCompatActivity {
                 if (uriData != null) {
                     results = new Uri[]{uriData};
                     for (Uri uri : results) {
-                        Log.e(TAG, "system return URI:" + uri.toString());
+                        Log.d(TAG, "system return URI:" + uri.toString());
                     }
                     mUploadCallbackAboveL.onReceiveValue(results);
                 } else {
                     mUploadCallbackAboveL.onReceiveValue(null);
                 }
             } else {
-                Log.e(TAG, "custom result:" + imageUri.toString());
                 mUploadCallbackAboveL.onReceiveValue(new Uri[]{imageUri});
             }
         } else {
@@ -212,7 +211,9 @@ public class SiltActivity extends AppCompatActivity {
             createImageFile();
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
             startActivityForResult(intent, REQUEST_CODE);
+
         } catch (IOException ex) {
 
         }
