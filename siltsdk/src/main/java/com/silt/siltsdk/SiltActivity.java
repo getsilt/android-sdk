@@ -31,6 +31,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+
+
 public class SiltActivity extends AppCompatActivity {
     private static final String TAG = "SiltActivity";
     private static final String SiltSignUpUrl = "https://signup.getsilt.com";
@@ -40,9 +42,7 @@ public class SiltActivity extends AppCompatActivity {
 
     //https://developpaper.com/android-webview¢-supports-input-file-to-enable-camera-select-photos/
     private android.webkit.ValueCallback mUploadCallbackAboveL;
-    private Uri imageUri;
     private int REQUEST_CODE = 1234;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +55,10 @@ public class SiltActivity extends AppCompatActivity {
 
     public void grantPermission() {
         String permissionCamera = Manifest.permission.CAMERA;
-        String permissionFiles = Manifest.permission.WRITE_EXTERNAL_STORAGE;
         List<String> permissionsList = new ArrayList<String>();
         int grantCamera = ContextCompat.checkSelfPermission(this, permissionCamera);
         if (grantCamera != PackageManager.PERMISSION_GRANTED) {
             permissionsList.add(permissionCamera);
-        }
-        int grantFiles = ContextCompat.checkSelfPermission(this, permissionFiles);
-        if (grantFiles != PackageManager.PERMISSION_GRANTED) {
-            permissionsList.add(permissionFiles);
         }
 
         if (permissionsList.size() > 0) {
@@ -162,64 +157,31 @@ public class SiltActivity extends AppCompatActivity {
         return;
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String filePath = Environment.getExternalStorageDirectory() + File.separator
-                + Environment.DIRECTORY_PICTURES + File.separator;
-        // if ( !storageDir.exists()) if ( !storageDir.mkdirs()) { Toast ( could not create directory);  return null;}
-        File image = new File(filePath + timeStamp + ".jpg");
-        imageUri = FileProvider.getUriForFile(
-                Objects.requireNonNull(getApplicationContext()),
-                "com.silt.siltsdk.provider",
-                image);
-        return image;
-    }
-
     private void chooseAbove(int resultCode, Intent data) {
         if (RESULT_OK == resultCode) {
-            updatePhotos();
-
-            if (data != null) {
-                //Here is the processing for selecting pictures from files
-                Uri[] results;
-                Uri uriData = data.getData();
-                if (uriData != null) {
-                    results = new Uri[]{uriData};
-                    for (Uri uri : results) {
-                        Log.d(TAG, "system return URI:" + uri.toString());
-                    }
-                    mUploadCallbackAboveL.onReceiveValue(results);
-                } else {
-                    mUploadCallbackAboveL.onReceiveValue(null);
-                }
-            } else {
-                mUploadCallbackAboveL.onReceiveValue(new Uri[]{imageUri});
+            File out = new File(getFilesDir(), CameraPictureProvider.FILENAME);
+            if(!out.exists()) {
+                Toast.makeText(getBaseContext(),
+                        "Error while capturing image", Toast.LENGTH_LONG)
+                        .show();
+                mUploadCallbackAboveL.onReceiveValue(null);
+                return;
             }
+            Log.d(TAG, "Sending file to webview: " + "file://" + out.getAbsolutePath());
+            mUploadCallbackAboveL.onReceiveValue(new Uri[]{Uri.parse("file://" + out.getAbsolutePath())});
         } else {
             mUploadCallbackAboveL.onReceiveValue(null);
         }
         mUploadCallbackAboveL = null;
     }
 
-    private void updatePhotos() {
-        //It doesn't matter if the broadcast is sent multiple times (i.e. when the photos are selected successfully), but it just wakes up the system to refresh the media files
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        intent.setData(imageUri);
-        sendBroadcast(intent);
-    }
-
-
     private void takePhoto() {
         try {
             grantPermission();
-            createImageFile();
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, CameraPictureProvider.CONTENT_URI);
             startActivityForResult(intent, REQUEST_CODE);
-
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Log.e(TAG, "Found exception while taking photo: ", ex);
         }
     }
