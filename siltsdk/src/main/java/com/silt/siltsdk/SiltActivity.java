@@ -167,6 +167,7 @@ public class SiltActivity extends AppCompatActivity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String filePath = Environment.getExternalStorageDirectory() + File.separator
                 + Environment.DIRECTORY_PICTURES + File.separator;
+        // if ( !storageDir.exists()) if ( !storageDir.mkdirs()) { Toast ( could not create directory);  return null;}
         File image = new File(filePath + timeStamp + ".jpg");
         imageUri = FileProvider.getUriForFile(
                 Objects.requireNonNull(getApplicationContext()),
