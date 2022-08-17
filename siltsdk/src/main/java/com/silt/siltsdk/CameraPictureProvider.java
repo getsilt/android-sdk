@@ -22,15 +22,16 @@ import java.util.UUID;
 public class CameraPictureProvider extends ContentProvider {
     private static final String TAG = "CameraPictureProvider";
     public static final String FILENAME = "tempPicture.jpg"; // static to save storage space
-    public static final Uri CONTENT_URI = Uri.parse("content://com.silt.siltsdk/cameraPicture");
+    public static Uri content_uri; // = Uri.parse("content://com.silt.siltdemojava/cameraPicture");;
 
     @Override
     public boolean onCreate() {
         try {
             File picture = new File(getContext().getFilesDir(), FILENAME);
+            content_uri = Uri.parse("content://"+getContext().getApplicationContext().getPackageName()+"/cameraPicture");
             if (!picture.exists())
                 if (picture.createNewFile()) {
-                    getContext().getContentResolver().notifyChange(CONTENT_URI, null);
+                    getContext().getContentResolver().notifyChange(content_uri, null);
                     Log.d(TAG, "created file uri: " + picture.getAbsolutePath());
                     return true;
                 }

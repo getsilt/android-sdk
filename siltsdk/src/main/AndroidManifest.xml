@@ -10,26 +10,12 @@
         android:required="true" />
 
     <application>
-        <meta-data
-            android:name="com.google.android.actions"
-            android:resource="@xml/file_paths" />
+        <activity android:name=".SiltActivity"/>
 
-        <activity android:name=".SiltActivity" android:requestLegacyExternalStorage="true"/>
-
-        <provider android:authorities="com.silt.siltsdk"
+        <provider android:authorities="${applicationId}"
             android:enabled="true"
             android:exported="true"
             android:name="com.silt.siltsdk.CameraPictureProvider" />
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.silt.siltsdk.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
     </application>
 
 </manifest>

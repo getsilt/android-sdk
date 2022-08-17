@@ -3,10 +3,9 @@ package com.silt.siltsdk;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -14,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
@@ -42,7 +42,10 @@ public class SiltActivity extends AppCompatActivity {
 
     //https://developpaper.com/android-webview¢-supports-input-file-to-enable-camera-select-photos/
     private android.webkit.ValueCallback mUploadCallbackAboveL;
-    private int REQUEST_CODE = 1234;
+    public String fileProviderAuthority = "";
+
+    private static final int REQUEST_CODE = 1234;
+    private static final int PERMISSION_REQUEST_CODE = 777;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,19 +54,9 @@ public class SiltActivity extends AppCompatActivity {
         extraQuery = getIntent().getStringExtra("extraQuery");
         setContentView(R.layout.activity_silt);
         loadSiltSignUp(CompanyAppId, extraQuery);
-    }
+        fileProviderAuthority = getApplicationContext().getPackageName() + ".siltsdk.CameraPictureProvider";
+        Log.d(TAG, "setting context provider name: " + fileProviderAuthority);
 
-    public void grantPermission() {
-        String permissionCamera = Manifest.permission.CAMERA;
-        List<String> permissionsList = new ArrayList<String>();
-        int grantCamera = ContextCompat.checkSelfPermission(this, permissionCamera);
-        if (grantCamera != PackageManager.PERMISSION_GRANTED) {
-            permissionsList.add(permissionCamera);
-        }
-
-        if (permissionsList.size() > 0) {
-            ActivityCompat.requestPermissions(this, permissionsList.toArray(new String[permissionsList.size()]), 1);
-        }
     }
 
     public void loadSiltSignUp(String companyAppId, String extraQuery) {
@@ -151,7 +144,7 @@ public class SiltActivity extends AppCompatActivity {
             if (mUploadCallbackAboveL != null) {
                 chooseAbove(resultCode, data);
             } else {
-                Toast.makeText(this, "error occurred", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error occurred", Toast.LENGTH_SHORT).show();
             }
         }
         return;
@@ -179,10 +172,40 @@ public class SiltActivity extends AppCompatActivity {
         try {
             grantPermission();
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, CameraPictureProvider.CONTENT_URI);
+            Log.d(TAG, "Starting camera to save file in: " + CameraPictureProvider.content_uri);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, CameraPictureProvider.content_uri);
             startActivityForResult(intent, REQUEST_CODE);
         } catch (Exception ex) {
             Log.e(TAG, "Found exception while taking photo: ", ex);
+        }
+    }
+
+
+    public void grantPermission() {
+        String permissionCamera = Manifest.permission.CAMERA;
+        List<String> permissionsList = new ArrayList<String>();
+        int grantCamera = ContextCompat.checkSelfPermission(this, permissionCamera);
+        if (grantCamera != PackageManager.PERMISSION_GRANTED) {
+            permissionsList.add(permissionCamera);
+        }
+
+        if (permissionsList.size() > 0) {
+            ActivityCompat.requestPermissions(this, permissionsList.toArray(new String[permissionsList.size()]), PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE: {
+                if (!(grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    Toast.makeText(this, "Camera permissions required", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+
         }
     }
 

@@ -29,7 +29,7 @@ You can import the SDK from the jitpack: https://jitpack.io/#getsilt/android-sdk
 ```
 dependencies {
    …
-    implementation 'com.github.getsilt:android-sdk:1.3.0’
+    implementation 'com.github.getsilt:android-sdk:X.X.X’
 }
 
 ```
