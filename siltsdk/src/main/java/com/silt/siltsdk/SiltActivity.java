@@ -35,9 +35,10 @@ import java.util.Objects;
 
 public class SiltActivity extends AppCompatActivity {
     private static final String TAG = "SiltActivity";
-    private static final String SiltSignUpUrl = "https://signup.getsilt.com";
-    private String CompanyAppId;
+    private static final String SiltSignUpUrl = "https://signup.getsilt.com/";
+    private String companyAppId;
     private String extraQuery;
+    private String path;
     private WebView webview;
 
     //https://developpaper.com/android-webview¢-supports-input-file-to-enable-camera-select-photos/
@@ -50,10 +51,11 @@ public class SiltActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CompanyAppId = getIntent().getStringExtra("companyAppId");
+        companyAppId = getIntent().getStringExtra("companyAppId");
+        path = getIntent().getStringExtra("path");
         extraQuery = getIntent().getStringExtra("extraQuery");
         setContentView(R.layout.activity_silt);
-        loadSiltSignUp(CompanyAppId, extraQuery);
+        loadSiltSignUp(companyAppId, extraQuery);
         fileProviderAuthority = getApplicationContext().getPackageName() + ".siltsdk.CameraPictureProvider";
         Log.d(TAG, "setting context provider name: " + fileProviderAuthority);
 
@@ -63,7 +65,7 @@ public class SiltActivity extends AppCompatActivity {
         if (extraQuery == null) {
             extraQuery = "";
         }
-        final String url = SiltSignUpUrl + "?company_app_id=" + companyAppId + extraQuery;
+        final String url = SiltSignUpUrl + path + "?company_app_id=" + companyAppId + extraQuery;
         webview = (WebView) findViewById(R.id.silt_web);
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
