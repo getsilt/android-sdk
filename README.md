@@ -115,42 +115,68 @@ binding.loginLayoutIncluded.siltButton.setOnClickListener {
 private val VERIFY_CODE = 777
 ```
 
-2. Add the function that opens the webview activity
-```
-private fun loadSiltSignUp() {
-  // ask for your companyAppId on hello@getsilt.com
-  // and use it in the initializer as extra
-  // siltActivity.putExtra("companyAppId", "{YOUR_CUSTOMER_APP_ID}")
-  // demo companyAppId: 9f936bc0-328f-4985-95b1-2c562061711f
-  val siltActivity = Intent(getActivity(), SiltActivity::class.java)
-  siltActivity.putExtra("companyAppId", "6f7838e4-3b30-447e-81c1-3e123bc34980")
-  startActivityForResult(siltActivity, this.VERIFY_CODE)
-}
-```
+2. Add the function that opens the webview activity.
+
+    Ask for your companyAppId on hello@getsilt.com
+    or get it from https://dashboard.getsilt.com
+    and use it in the initializer as extra
+    ```
+    siltActivity.putExtra("companyAppId", "{YOUR_CUSTOMER_APP_ID}")
+    ```
+    Demo companyAppId: `2022a022-a662-4c58-8865-a1fb904d2cde`
+
+    If you want to use other services, like biocheck, add the path to the propper
+    ```
+    siltActivity.putExtra("path", "biocheck");
+    ```
+    Keep in mind that to use biocheck, you will need to create a company app temporary token
+    through API. Check more about this in https://getsilt.com/developers
+    ```
+    siltActivity.putExtra("extraQuery", "&temp_token=1462a0c1-ab62-8888-7824-b9fd115c1acd");
+    ```
+    Example KYC: 
+    ```
+    private fun loadSiltSignUp() {
+        val siltActivity = Intent(getActivity(), SiltActivity::class.java)
+        siltActivity.putExtra("companyAppId", "2022a022-a662-4c58-8865-a1fb904d2cde");
+        siltActivity.putExtra("extraQuery", "&user_email=test@getsilt.com");
+        startActivityForResult(siltActivity, this.VERIFY_CODE)
+    }
+    ```
+    Example Biocheck: 
+    ```
+    private fun loadSiltSignUp() {
+        val siltActivity = Intent(getActivity(), SiltActivity::class.java)
+        siltActivity.putExtra("companyAppId", "2022a022-a662-4c58-8865-a1fb904d2cde");
+        siltActivity.putExtra("path", "biocheck");
+        siltActivity.putExtra("extraQuery", "&temp_token=xxxxxxxxxxxxxxxxxxxxxx");
+        startActivityForResult(siltActivity, this.VERIFY_CODE)
+    }
+    ```
 
 3. Add the function that handles the webview response
-```
-override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-  super.onActivityResult(requestCode, resultCode, data)
-  if (resultCode == Activity.RESULT_OK && requestCode == this.VERIFY_CODE) {
-    if (data!!.hasExtra("silt_user_id") && data.hasExtra("company_app_token")) {
-      Log.d(
-        "Verify",
-        "####### Got user Id from Silt: " + data.getStringExtra("silt_user_id")
-      )
-      Log.d(
-        "Verify",
-        "####### Got Company App Token: " + data.getStringExtra("company_app_token")
-      )
-      /*
-              * 1. Place here a function that calls to your backend with user_id
-              * 2. Your backend should make a request to Silt API to /v1/users/{user_id}
-              * 3. Retrieve the info that you want from that response
-              * */
+    ```
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+      super.onActivityResult(requestCode, resultCode, data)
+      if (resultCode == Activity.RESULT_OK && requestCode == this.VERIFY_CODE) {
+        if (data!!.hasExtra("silt_user_id") && data.hasExtra("company_app_token")) {
+          Log.d(
+            "Verify",
+            "####### Got user Id from Silt: " + data.getStringExtra("silt_user_id")
+          )
+          Log.d(
+            "Verify",
+            "####### Got Company App Token: " + data.getStringExtra("company_app_token")
+          )
+          /*
+                  * 1. Place here a function that calls to your backend with user_id
+                  * 2. Your backend should make a request to Silt API to /v1/users/{user_id}
+                  * 3. Retrieve the info that you want from that response
+                  * */
+        }
+      }
     }
-  }
-}
-```
+    ```
 ————————————————————
 #### Java
 1. Add the property VERIFY_CODE to the class
@@ -159,24 +185,44 @@ private static final int VERIFY_CODE = 777;
 ```
 
 2. Add the function that opens the webview activity
-```
-public void loadSiltSignUp(View v) {
-    // Ask for your companyAppId on hello@getsilt.com
-    // or get it from https://dashboard.getsilt.com
-    // and use it in the initializer as extra
-    // siltActivity.putExtra("companyAppId", "{YOUR_CUSTOMER_APP_ID}")
-    // demo companyAppId: 2022a022-a662-4c58-8865-a1fb904d2cde
-    // If you want to use other services, like biocheck, add the path to the propper
-    // siltActivity.putExtra("path", "biocheck");
-    // Keep in mind that to use biocheck, you will need to create a company app temporary token
-    // through API. Check more about this in getsilt.com/developers
-    // siltActivity.putExtra("extraQuery", "&temp_token=1462a0c1-ab62-8888-7824-b9fd115c1acd");
-    Intent siltActivity = new Intent(this, SiltActivity.class);
-    siltActivity.putExtra("companyAppId", "2022a022-a662-4c58-8865-a1fb904d2cde");
-    siltActivity.putExtra("extraQuery", "&user_email=test@getsilt.com");
-    startActivityForResult(siltActivity, VERIFY_CODE);
-}
-```
+
+    Ask for your companyAppId on hello@getsilt.com
+    or get it from https://dashboard.getsilt.com
+    and use it in the initializer as extra
+    ```
+    siltActivity.putExtra("companyAppId", "{YOUR_CUSTOMER_APP_ID}")
+    ```
+    Demo companyAppId: `2022a022-a662-4c58-8865-a1fb904d2cde`
+
+    If you want to use other services, like biocheck, add the path to the propper
+    ```
+    siltActivity.putExtra("path", "biocheck");
+    ```
+    Keep in mind that to use biocheck, you will need to create a company app temporary token
+    through API. Check more about this in https://getsilt.com/developers
+    ```
+    siltActivity.putExtra("extraQuery", "&temp_token=1462a0c1-ab62-8888-7824-b9fd115c1acd");
+    ```
+    Example KYC: 
+    ```
+    public void loadSiltSignUp(View v) {    
+        Intent siltActivity = new Intent(this, SiltActivity.class);
+        siltActivity.putExtra("companyAppId", "2022a022-a662-4c58-8865-a1fb904d2cde");
+        siltActivity.putExtra("extraQuery", "&user_email=test@getsilt.com");
+        startActivityForResult(siltActivity, VERIFY_CODE);
+    }
+    ```
+    Example Biocheck: 
+    ```
+    public void loadSiltSignUp(View v) {    
+        Intent siltActivity = new Intent(this, SiltActivity.class);
+        siltActivity.putExtra("companyAppId", "2022a022-a662-4c58-8865-a1fb904d2cde");
+        siltActivity.putExtra("path", "biocheck");
+        siltActivity.putExtra("extraQuery", "&temp_token=xxxxxxxxxxxxxxxxxxxxxx");
+        startActivityForResult(siltActivity, VERIFY_CODE);
+    }
+    ```
+
 3. Add the function that handles the webview response
 ```
 @Override
