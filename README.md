@@ -161,12 +161,19 @@ private static final int VERIFY_CODE = 777;
 2. Add the function that opens the webview activity
 ```
 public void loadSiltSignUp(View v) {
-    // ask for your companyAppId on hello@getsilt.com
+    // Ask for your companyAppId on hello@getsilt.com
+    // or get it from https://dashboard.getsilt.com
     // and use it in the initializer as extra
     // siltActivity.putExtra("companyAppId", "{YOUR_CUSTOMER_APP_ID}")
-    // demo companyAppId: 9f936bc0-328f-4985-95b1-2c562061711f
+    // demo companyAppId: 2022a022-a662-4c58-8865-a1fb904d2cde
+    // If you want to use other services, like biocheck, add the path to the propper
+    // siltActivity.putExtra("path", "biocheck");
+    // Keep in mind that to use biocheck, you will need to create a company app temporary token
+    // through API. Check more about this in getsilt.com/developers
+    // siltActivity.putExtra("extraQuery", "&temp_token=1462a0c1-ab62-8888-7824-b9fd115c1acd");
     Intent siltActivity = new Intent(this, SiltActivity.class);
-    siltActivity.putExtra("companyAppId", "6f7838e4-3b30-447e-81c1-3e123bc34980");
+    siltActivity.putExtra("companyAppId", "2022a022-a662-4c58-8865-a1fb904d2cde");
+    siltActivity.putExtra("extraQuery", "&user_email=test@getsilt.com");
     startActivityForResult(siltActivity, VERIFY_CODE);
 }
 ```
